@@ -1,13 +1,17 @@
 import pandas as pd
 import folium
 import streamlit as st
+import duckdb
 from streamlit.components.v1 import html
 from streamlit_folium import st_folium
 from folium.plugins import MarkerCluster
 
-data_path = 'data/CelularesSubtraidos_2024.xlsx'
+#data_path = 'data/CelularesSubtraidos_2024.xlsx'
 
-df = pd.read_excel(data_path)
+conn = duckdb.connect('data/celulares.duckdb')
+
+df = pd.read_sql('select * from minha_tabela_v2', conn)
+df['LATITUDE'] = pd.to_numeric(df['LATITUDE'], errors='coerce')
 clean_df = df[df['LATITUDE'] < 0]
 clean_df_sp = clean_df[clean_df['NOME_MUNICIPIO'] == 'S.PAULO']
 cluster_data = clean_df_sp[['LATITUDE', 'LONGITUDE']].values.tolist()
