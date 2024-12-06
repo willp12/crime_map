@@ -11,7 +11,7 @@ conn = duckdb.connect('data/celulares.duckdb')
 
 # Capturar o lat long de celulares subtraídos
 
-df = conn.sql('select * from minha_tabela_v2').df() # transforma a tabela em dataframe
+df = pd.read_sql('select * from minha_tabela_v2', conn) # transforma a tabela em dataframe
 df['LATITUDE'] = pd.to_numeric(df['LATITUDE'], errors='coerce') # transforma a latitude no tipo numerico
 clean_df = df[df['LATITUDE'] < 0] # considera apenas latitudes menores que 0
 clean_df_sp = clean_df[clean_df['NOME_MUNICIPIO'] == 'S.PAULO'] # considera apenas municipio de são paulo
